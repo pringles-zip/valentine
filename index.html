@@ -29,6 +29,21 @@ body {
 
 body {
   margin: 0;
+  background: radial-gradient(circle at top, #fff7fb, var(--baby-pink));
+  font-family: 'Nunito', sans-serif;
+  overflow: hidden;
+  transition: background 0.6s ease;
+}
+#app {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+}
+
+/* body { 
+  margin: 0;
   height: 100vh;
   background: radial-gradient(circle at top, #fff7fb, var(--baby-pink));
   font-family: 'Nunito', sans-serif;
@@ -38,9 +53,10 @@ body {
   justify-content: center;
   transition: background 0.6s ease;
 }
-
+*/
 /* CARD */
 .card {
+  margin: 0;
   width: 92%;
   max-width: 420px;
   background: #fff5fa;
@@ -283,6 +299,11 @@ button {
   box-shadow: 0 10px 25px rgba(255,126,182,0.6);
 }
 
+@media (max-height: 700px) {
+  .card {
+    transform: scale(0.95);
+  }
+}
 
 </style>
 </head>
