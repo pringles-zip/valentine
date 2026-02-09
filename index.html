@@ -15,6 +15,16 @@
   --text: #5a1a2c;
 }
 
+  html, body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100svh; /* FIX: mobile-safe viewport */
+}
+
+
 * { box-sizing: border-box; }
 
 body {
@@ -175,31 +185,35 @@ button {
 /* LOVE NOTE */
 .note {
   position: fixed;
-  bottom: -100%;
-  left: 50%;
-  transform: translateX(-50%);
+  inset: 0;
+  background: rgba(255, 224, 239, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.note > div {
   background: #fff0f7;
   border-radius: 24px;
-  padding: 26px 24px;
+  padding: 28px 24px;
   width: 86%;
   max-width: 360px;
   text-align: center;
   font-family: 'Chewy', cursive;
   color: #ff4d6d;
   box-shadow: 0 20px 50px rgba(255,126,182,0.5);
-  animation: slideUp 1s ease forwards;
-  z-index: 9;
 }
 
-@keyframes slideUp {
-  to { bottom: 10%; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /*  */
-/* SCREEN SHAKE */
-body.shake {
-  animation: shake 0.35s;
-}
+#app.shake { animation: shake 0.35s; }
+#app.wobble { animation: wobble 0.6s ease; }
 
 @keyframes shake {
   0% { transform: translate(0); }
@@ -227,9 +241,7 @@ body.shake {
   100% { transform: scale(1); opacity: 0; }
 }
 
-body.wobble {
-  animation: wobble 0.6s ease;
-}
+
 
 @keyframes wobble {
   0% { transform: rotate(0deg); }
@@ -277,7 +289,8 @@ body.wobble {
 
 <body>
 
-<div class="card" id="card">
+<div id="app">
+  <div class="card" id="card">
   <h1>Be My Valentine?</h1>
   <div class="scribble"></div>
   <p>I promise loyalty, chaos, and comfort.</p>
@@ -291,6 +304,8 @@ body.wobble {
 </div>
 
 <script>
+const app = document.getElementById("app"); // FIX: animation target
+
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const msg = document.getElementById("msg");
@@ -298,6 +313,9 @@ const card = document.getElementById("card");
 
 const pageLoadedAt = Date.now();
 let noCount = 0;
+
+// default heart speed
+document.body.style.setProperty("--heart-speed", "14s");
 
 const yesTexts = [
   "YES 💖",
@@ -309,7 +327,6 @@ const yesTexts = [
   "YES! YES!! YES!!!",
   "JUST CLICK YEEESSSSSS",
   "YEESSSSSSS LESGOOOO"
-
 ];
 
 const funnyMessages = [
@@ -333,30 +350,33 @@ const bubbles = [
   "HEYYYYY!!!!!"
 ];
 
+// spawn hearts immediately
 spawnInitialHearts();
-document.body.style.setProperty("--heart-speed", "14s");
 
-
+/* ---------------- NO BUTTON ---------------- */
 noBtn.addEventListener("click", (e) => {
   noCount++;
 
-  // COMIC SCREEN SHAKE 💥
-  document.body.classList.remove("shake"); // reset if already shaking
-  void document.body.offsetWidth; // force reflow
-  document.body.classList.add("shake");
+  /* stronger shake each time */
+  const shakePower = Math.min(1 + noCount * 0.15, 2);
+  app.style.setProperty("--shake", shakePower);
 
-  // hearts speed up with drama 💨
-const heartSpeed = Math.max(6, 14 - noCount * 1.2);
-document.body.style.setProperty("--heart-speed", heartSpeed + "s");
+  // trigger shake (once)
+  app.classList.remove("shake");
+  void app.offsetWidth;
+  app.classList.add("shake");
 
+  // speed up hearts
+  const heartSpeed = Math.max(6, 14 - noCount * 1.2);
+  document.body.style.setProperty("--heart-speed", heartSpeed + "s");
 
-  // YES gets COMICALLY BIG
+  // YES grows comically
   yesBtn.style.transform =
     `translateX(-50%) scale(${1 + noCount * 0.4})`;
   yesBtn.textContent =
     yesTexts[Math.min(noCount, yesTexts.length - 1)];
 
-  // funny bottom text (RESTORED)
+  // bottom funny text
   msg.textContent =
     funnyMessages[Math.min(noCount - 1, funnyMessages.length - 1)];
 
@@ -365,53 +385,44 @@ document.body.style.setProperty("--heart-speed", heartSpeed + "s");
     `translate(${Math.random() * 160 - 80}px, ${Math.random() * 60}px)
      rotate(${Math.random() * 20 - 10}deg)`;
 
-  // comic speech bubble
+  // comic effects
   spawnBubble(e.clientX, e.clientY);
   spawnThud(e.clientX + 10, e.clientY + 20);
 
-
-  // NO eventually gives up
-if (noCount > 7) {
-  document.body.classList.add("wobble");
-  setTimeout(() => {
-    noBtn.style.opacity = 0;
-    noBtn.style.pointerEvents = "none";
-    msg.textContent = "NO button has surrendered 🏳️";
-  }, 400);
-}
-
-
-  // stronger shake each time (caps at 2)
-const shakePower = Math.min(1 + noCount * 0.15, 2);
-document.body.style.setProperty("--shake", shakePower);
-
-// trigger shake every time
-document.body.classList.remove("shake");
-void document.body.offsetWidth;
-document.body.classList.add("shake");
-
+  // final defeat
+  if (noCount > 7) {
+    app.classList.add("wobble");
+    setTimeout(() => {
+      noBtn.style.opacity = 0;
+      noBtn.style.pointerEvents = "none";
+      msg.textContent = "NO button has surrendered 🏳️";
+    }, 400);
+  }
 });
 
+/* ---------------- YES BUTTON ---------------- */
+yesBtn.addEventListener("click", () => {
+  card.remove();
+
+  document.body.style.background =
+    "radial-gradient(circle at top, #ffb3d9, #ff4d6d)";
+
+  notifyYes();
+  kaboom();
+  confetti();
+  showLoveNote();
+
+  if (Date.now() - pageLoadedAt < 1500) showSecret();
+});
+
+/* ---------------- REPLAY ---------------- */
 document.addEventListener("click", (e) => {
   if (e.target.id === "replayBtn") {
     location.reload();
   }
 });
 
-yesBtn.addEventListener("click", () => {
-  card.remove();
-  document.body.style.background =
-    "radial-gradient(circle at top, #ffb3d9, #ff4d6d)";
-  
-  notifyYes();
-  kaboom();
-  confetti();
-  showLoveNote();
-
-
-  if (Date.now() - pageLoadedAt < 1500) showSecret();
-});
-
+/* ---------------- EFFECT FUNCTIONS ---------------- */
 function spawnBubble(x, y) {
   const b = document.createElement("div");
   b.className = "bubble";
@@ -420,6 +431,16 @@ function spawnBubble(x, y) {
   b.style.top = y - 40 + "px";
   document.body.appendChild(b);
   setTimeout(() => b.remove(), 700);
+}
+
+function spawnThud(x, y) {
+  const t = document.createElement("div");
+  t.className = "thud";
+  t.textContent = "thud";
+  t.style.left = x + "px";
+  t.style.top = y + "px";
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 400);
 }
 
 function kaboom() {
@@ -451,18 +472,14 @@ function showLoveNote() {
   note.className = "note";
 
   note.innerHTML = `
-    💌<br>
-    <span style="font-size:1.2rem">
-      I wanted to ask you in a way that felt like me.
-    </span>
-    <br><br>
-    And I’m really glad you said <strong>yes</strong> 💖
-    <br><br>
-    <span style="font-size:0.95rem; opacity:0.85">
-      (I was lowkey nervous, not gonna lie 😅)
-    </span>
-
-    <div style="margin-top:18px">
+    <div>
+      💌<br><br>
+      I wanted to ask you in a way that felt like me.<br><br>
+      And I’m really glad you said <strong>yes</strong> 💖<br><br>
+      <span style="font-size:0.95rem; opacity:0.85">
+        (I was lowkey nervous, not gonna lie 😅)
+      </span>
+      <br><br>
       <button id="replayBtn">Replay 💫</button>
     </div>
   `;
@@ -479,7 +496,7 @@ function showSecret() {
   setTimeout(() => secret.remove(), 1200);
 }
 
-// hearts
+/* ---------------- HEARTS ---------------- */
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "heart";
@@ -496,26 +513,16 @@ function spawnInitialHearts(count = 12) {
     h.textContent = Math.random() > 0.5 ? "💗" : "❤️";
     h.style.left = Math.random() * 100 + "vw";
     h.style.animationDuration = 10 + Math.random() * 6 + "s";
-    h.style.opacity = 0.6;
     document.body.appendChild(h);
     setTimeout(() => h.remove(), 18000);
   }
 }
-function spawnThud(x, y) {
-  const t = document.createElement("div");
-  t.className = "thud";
-  t.textContent = "thud";
-  t.style.left = x + "px";
-  t.style.top = y + "px";
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 400);
-}
 
+/* blush effect */
 yesBtn.addEventListener("mouseenter", () => {
   yesBtn.classList.add("blush");
   setTimeout(() => yesBtn.classList.remove("blush"), 500);
 });
-
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -535,6 +542,6 @@ yesBtn.addEventListener("mouseenter", () => {
 }
 
 </script>
-
+</div> 
 </body>
 </html>
