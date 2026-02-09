@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Be My Valentine 💘</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Baloo+2:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --baby-pink: #ffe0ef;
+  --hot-pink: #ff7eb6;
+  --soft-red: #ff4d6d;
+  --text: #5a1a2c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #fff7fb, var(--baby-pink));
+  font-family: 'Nunito', sans-serif;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.6s ease;
+}
+
+/* CARD */
+.card {
+  width: 92%;
+  max-width: 420px;
+  background: #fff5fa;
+  border-radius: 30px;
+  padding: 36px 26px 42px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(255, 126, 182, 0.35);
+  position: relative;
+  animation: popIn 0.6s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+h1 {
+  font-family: 'Chewy', cursive;
+  font-size: 2.8rem;
+  color: var(--soft-red);
+  margin-bottom: 6px;
+}
+
+.scribble {
+  width: 170px;
+  height: 14px;
+  margin: 0 auto 18px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 10 Q50 2 100 10 T195 10' stroke='%23ff4d6d' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center;
+}
+
+p {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 30px;
+}
+
+/* BUTTONS */
+.buttons {
+  position: relative;
+  height: 240px;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 18px 40px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#yesBtn {
+  background: linear-gradient(135deg, var(--hot-pink), #ffb3d9);
+  color: #4a001a;
+  box-shadow: 0 16px 36px rgba(255,126,182,0.6);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#noBtn {
+  background: #fff;
+  color: var(--text);
+  border: 2px dashed #ffd1e6;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* MESSAGE BOX */
+.message {
+  margin-top: 20px;
+  min-height: 34px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.05rem;
+  color: var(--soft-red);
+  background: #ffe9f3;
+  padding: 12px 16px;
+  border-radius: 16px;
+}
+
+/* SPEECH BUBBLE */
+.bubble {
+  position: absolute;
+  background: #fff;
+  border: 3px solid var(--soft-red);
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  color: var(--soft-red);
+  box-shadow: 4px 4px 0 var(--soft-red);
+  animation: bubblePop 0.5s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes bubblePop {
+  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+  70% { transform: scale(1.2) rotate(6deg); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* HEARTS */
+.heart {
+  position: absolute;
+  font-size: 38px;
+  animation: floatUp var(--heart-speed) linear infinite;
+  opacity: 0.6;
+}
+
+
+@keyframes floatUp {
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-10vh); }
+}
+
+
+/* KABOOM */
+.kaboom {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Chewy', cursive;
+  font-size: 4.2rem;
+  color: #fff;
+  text-shadow: 6px 6px 0 var(--soft-red);
+  background: rgba(255, 126, 182, 0.9);
+  animation: kaboom 0.9s ease forwards;
+  z-index: 10;
+}
+
+@keyframes kaboom {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.25); opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* LOVE NOTE */
+.note {
+  position: fixed;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff0f7;
+  border-radius: 24px;
+  padding: 26px 24px;
+  width: 86%;
+  max-width: 360px;
+  text-align: center;
+  font-family: 'Chewy', cursive;
+  color: #ff4d6d;
+  box-shadow: 0 20px 50px rgba(255,126,182,0.5);
+  animation: slideUp 1s ease forwards;
+  z-index: 9;
+}
+
+@keyframes slideUp {
+  to { bottom: 10%; }
+}
+
+/*  */
+/* SCREEN SHAKE */
+body.shake {
+  animation: shake 0.35s;
+}
+
+@keyframes shake {
+  0% { transform: translate(0); }
+  20% { transform: translate(calc(-6px * var(--shake)), calc(4px * var(--shake))); }
+  40% { transform: translate(calc(6px * var(--shake)), calc(-4px * var(--shake))); }
+  60% { transform: translate(calc(-4px * var(--shake)), calc(2px * var(--shake))); }
+  80% { transform: translate(calc(4px * var(--shake)), calc(-2px * var(--shake))); }
+  100% { transform: translate(0); }
+}
+
+.thud {
+  position: fixed;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.1rem;
+  color: #ff4d6d;
+  opacity: 0;
+  animation: thudPop 0.4s ease forwards;
+  pointer-events: none;
+  z-index: 8;
+}
+
+@keyframes thudPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+body.wobble {
+  animation: wobble 0.6s ease;
+}
+
+@keyframes wobble {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-2deg); }
+  40% { transform: rotate(2deg); }
+  60% { transform: rotate(-1deg); }
+  80% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+#yesBtn.blush {
+  animation: blush 0.5s ease;
+}
+
+@keyframes blush {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 126, 182, 0.7);
+    filter: saturate(1);
+  }
+  50% {
+    box-shadow: 0 0 18px 8px rgba(255, 126, 182, 0.6);
+    filter: saturate(1.2);
+  }
+  100% {
+    box-shadow: 0 16px 36px rgba(255,126,182,0.6);
+    filter: saturate(1);
+  }
+}
+#replayBtn {
+  margin-top: 18px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  background: #ff7eb6;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(255,126,182,0.6);
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Be My Valentine?</h1>
+  <div class="scribble"></div>
+  <p>I promise cuddles, chaos, and snacks.</p>
+
+  <div class="buttons">
+    <button id="yesBtn">YES 💖</button>
+    <button id="noBtn">No 😐</button>
+  </div>
+
+  <div class="message" id="msg">Go on… try clicking NO 😏</div>
+</div>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const msg = document.getElementById("msg");
+const card = document.getElementById("card");
+
+const pageLoadedAt = Date.now();
+let noCount = 0;
+
+const yesTexts = [
+  "YES 💖",
+  "YES PLEASE 💕",
+  "OKAY FINE YES 😭",
+  "I ALREADY SAID YES",
+  "JUST CLICK ME",
+  "THERE'S NO ESCAPE",
+  "YES! YES!! YES!!!",
+  "JUST CLICK YEEESSSSSS",
+
+];
+
+const funnyMessages = [
+  "Wait WHAT 😳",
+  "Hey that’s rude 😤",
+  "Ouch… my heart 😔",
+  "Be serious rn 🥺",
+  "Look at the YES button 👀",
+  "You’re enjoying this 😈",
+  "NO button is scared 💀"
+];
+
+const bubbles = [
+  "HEY!",
+  "RUDE!",
+  "OUCH!",
+  "WHY THO?",
+  "EXCUSE ME?",
+  "WOW OKAY",
+  "THIS IS PERSONAL",
+  "HEYYYYY!!!!!"
+];
+
+spawnInitialHearts();
+document.body.style.setProperty("--heart-speed", "14s");
+
+
+noBtn.addEventListener("click", (e) => {
+  noCount++;
+
+  // COMIC SCREEN SHAKE 💥
+  document.body.classList.remove("shake"); // reset if already shaking
+  void document.body.offsetWidth; // force reflow
+  document.body.classList.add("shake");
+
+  // hearts speed up with drama 💨
+const heartSpeed = Math.max(6, 14 - noCount * 1.2);
+document.body.style.setProperty("--heart-speed", heartSpeed + "s");
+
+
+  // YES gets COMICALLY BIG
+  yesBtn.style.transform =
+    `translateX(-50%) scale(${1 + noCount * 0.4})`;
+  yesBtn.textContent =
+    yesTexts[Math.min(noCount, yesTexts.length - 1)];
+
+  // funny bottom text (RESTORED)
+  msg.textContent =
+    funnyMessages[Math.min(noCount - 1, funnyMessages.length - 1)];
+
+  // NO runs away
+  noBtn.style.transform =
+    `translate(${Math.random() * 160 - 80}px, ${Math.random() * 60}px)
+     rotate(${Math.random() * 20 - 10}deg)`;
+
+  // comic speech bubble
+  spawnBubble(e.clientX, e.clientY);
+  spawnThud(e.clientX + 10, e.clientY + 20);
+
+
+  // NO eventually gives up
+if (noCount > 7) {
+  document.body.classList.add("wobble");
+  setTimeout(() => {
+    noBtn.style.opacity = 0;
+    noBtn.style.pointerEvents = "none";
+    msg.textContent = "NO button has surrendered 🏳️";
+  }, 400);
+}
+
+
+  // stronger shake each time (caps at 2)
+const shakePower = Math.min(1 + noCount * 0.15, 2);
+document.body.style.setProperty("--shake", shakePower);
+
+// trigger shake every time
+document.body.classList.remove("shake");
+void document.body.offsetWidth;
+document.body.classList.add("shake");
+
+});
+
+document.addEventListener("click", (e) => {
+  if (e.target.id === "replayBtn") {
+    location.reload();
+  }
+});
+
+yesBtn.addEventListener("click", () => {
+  card.remove();
+  document.body.style.background =
+    "radial-gradient(circle at top, #ffb3d9, #ff4d6d)";
+  
+  notifyYes();
+  kaboom();
+  confetti();
+  showLoveNote();
+
+
+  if (Date.now() - pageLoadedAt < 1500) showSecret();
+});
+
+function spawnBubble(x, y) {
+  const b = document.createElement("div");
+  b.className = "bubble";
+  b.textContent = bubbles[Math.min(noCount - 1, bubbles.length - 1)];
+  b.style.left = x - 40 + "px";
+  b.style.top = y - 40 + "px";
+  document.body.appendChild(b);
+  setTimeout(() => b.remove(), 700);
+}
+
+function kaboom() {
+  const k = document.createElement("div");
+  k.className = "kaboom";
+  k.textContent = "KABOOM!";
+  document.body.appendChild(k);
+  setTimeout(() => k.remove(), 900);
+}
+
+function confetti() {
+  for (let i = 0; i < 160; i++) {
+    const c = document.createElement("div");
+    c.style.position = "fixed";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.top = "-10px";
+    c.style.width = "10px";
+    c.style.height = "10px";
+    c.style.background =
+      Math.random() > 0.5 ? "#ff7eb6" : "#ff4d6d";
+    c.style.animation = `fall ${3 + Math.random()*2}s linear forwards`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+function showLoveNote() {
+  const note = document.createElement("div");
+  note.className = "note";
+
+  note.innerHTML = `
+    💌<br>
+    <span style="font-size:1.2rem">
+      I wanted to ask you in a way that felt like me.
+    </span>
+    <br><br>
+    And I’m really glad you said <strong>yes</strong> 💖
+    <br><br>
+    <span style="font-size:0.95rem; opacity:0.85">
+      (I was lowkey nervous, not gonna lie 😅)
+    </span>
+
+    <div style="margin-top:18px">
+      <button id="replayBtn">Replay 💫</button>
+    </div>
+  `;
+
+  document.body.appendChild(note);
+}
+
+
+function showSecret() {
+  const secret = document.createElement("div");
+  secret.className = "kaboom";
+  secret.textContent = "YOU WANTED TO 😭💖";
+  document.body.appendChild(secret);
+  setTimeout(() => secret.remove(), 1200);
+}
+
+// hearts
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = Math.random() > 0.5 ? "💗" : "❤️";
+  h.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 16000);
+}, 650);
+
+function spawnInitialHearts(count = 12) {
+  for (let i = 0; i < count; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = Math.random() > 0.5 ? "💗" : "❤️";
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.animationDuration = 10 + Math.random() * 6 + "s";
+    h.style.opacity = 0.6;
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 18000);
+  }
+}
+function spawnThud(x, y) {
+  const t = document.createElement("div");
+  t.className = "thud";
+  t.textContent = "thud";
+  t.style.left = x + "px";
+  t.style.top = y + "px";
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 400);
+}
+
+yesBtn.addEventListener("mouseenter", () => {
+  yesBtn.classList.add("blush");
+  setTimeout(() => yesBtn.classList.remove("blush"), 500);
+});
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("pVtTuFrGeND-yN_XC");
+  })();
+
+  function notifyYes() {
+  emailjs.send(
+    "service_luqti8l",
+    "valentine_yes",
+    {
+      time: new Date().toLocaleString()
+    }
+  ).catch(err => console.log("EmailJS error:", err));
+}
+
+</script>
+
+</body>
+</html>
